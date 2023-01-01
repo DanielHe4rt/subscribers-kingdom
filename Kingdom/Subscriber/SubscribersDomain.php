@@ -6,7 +6,7 @@ use Kingdom\Core\Contracts\DomainInterface;
 use Kingdom\Subscriber\Infrastructure\Providers\SubscriberRouteProvider;
 use Kingdom\Subscriber\Infrastructure\Providers\SubscriberServiceProvider;
 
-class Domain extends DomainInterface
+class SubscribersDomain extends DomainInterface
 {
     public function registerProvider(): array
     {
