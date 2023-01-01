@@ -8,10 +8,14 @@ use Kingdom\Subscriber\Infrastructure\Models\Subscriber;
 class SubscriberFactory extends Factory
 {
     protected $model = Subscriber::class;
-    public function definition()
+
+    public function definition(): array
     {
         return [
-
+            'id' => $this->faker->uuid(),
+            'name' => $this->faker->name(),
+            'phone_number' => $this->faker->phoneNumber(),
+            'email_id' => null,
         ];
     }
 }
