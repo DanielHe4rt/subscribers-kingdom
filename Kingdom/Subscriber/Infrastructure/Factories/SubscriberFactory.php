@@ -10,6 +10,8 @@ class SubscriberFactory extends Factory
     protected $model = Subscriber::class;
     public function definition()
     {
-        // TODO: Implement definition() method.
+        return [
+
+        ];
     }
 }

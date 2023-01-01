@@ -4,7 +4,7 @@ namespace Kingdom\Subscriber\Infrastructure\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class UserServiceProvider extends ServiceProvider
+class SubscriberServiceProvider extends ServiceProvider
 {
     public function register()
     {
