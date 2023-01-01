@@ -4,6 +4,7 @@ namespace Kingdom\Core\Classes;
 
 use FilesystemIterator;
 use Kingdom\Core\Contracts\DomainInterface;
+use Kingdom\Core\DTO\DomainDTO;
 use Kingdom\Core\Exceptions\DomainNotExistsException;
 use Kingdom\Core\Exceptions\DomainExtendException;
 use Kingdom\Core\Traits\Singleton;
@@ -41,8 +42,8 @@ class DomainManager
         /**
          * Locate all domains and binds them to the container
          */
-        foreach ($this->getDomainNamespaces() as $namespace => $path) {
-            $this->loadDomain($namespace, $path);
+        foreach ($this->getDomainNamespaces() as $domainDTO) {
+            $this->loadDomain($domainDTO);
         }
 
         return $this->domains;
@@ -51,21 +52,22 @@ class DomainManager
     /**
      * Returns a flat array of vendor domain namespaces and their paths
      *
-     * @return array
+     * @return array<int, DomainDTO>
      */
     public function getDomainNamespaces(): array
     {
-        $classNames = [];
+        $domains = [];
 
         foreach ($this->getVendorAndDomainNames() as $vendorName => $vendorList) {
-            foreach ($vendorList as $domainName => $domainPath) {
+            foreach ($vendorList as $domainName => $domainPayload) {
                 $namespace = '\\' . $vendorName . '\\' . $domainName;
                 $namespace = $this->normalizeClassName($namespace);
-                $classNames[$namespace] = $domainPath;
+                $classNames[$namespace] = $domainPayload;
+                $domains[] = DomainDTO::make($namespace, $domainPayload);
             }
         }
 
-        return $classNames;
+        return $domains;
     }
 
     public function normalizeClassName($name): string
@@ -100,12 +102,15 @@ class DomainManager
         $it->rewind();
 
         while ($it->valid()) {
-            if ($it->isFile() && (strtolower($it->getFilename()) == 'domain.php')) {
+            if ($it->isFile() && str_contains(strtolower($it->getFilename()), 'domain.php')) {
                 $filePath = dirname($it->getPathname());
                 $vendorPaths = array_reverse(explode('/', $filePath));
                 $domainName = basename($filePath);
                 $vendorName = $this->getPathFromCoreDomain($coreDomain, $vendorPaths);
-                $domains[$vendorName][$domainName] = $filePath;
+                $domains[$vendorName][$domainName] = [
+                    'filePath' => $filePath,
+                    'fileName' => str($it->getFilename())->remove('.php')->toString()
+                ];
             }
 
             $it->next();
@@ -146,58 +151,59 @@ class DomainManager
      * @throws DomainNotExistsException
      * @throws DomainExtendException
      */
-    public function loadDomain($namespace, string $path)
+    public function loadDomain(DomainDTO $domainDTO)
     {
-        $class = $this->getDomainClassName($namespace);
+        $domainNamespace = $this->getDomainClassName($domainDTO);
 
         // Not a valid domain!
-        if (is_string($class) && !class_exists($class)) {
-            throw new DomainNotExistsException('Domain ' . $class . ' could not be instantiated.');
+        if (is_string($domainNamespace) && !class_exists($domainNamespace)) {
+            throw DomainNotExistsException::domainNotInstantiable($domainNamespace);
         }
 
-        if (realpath($path) === false) {
-            throw new DomainNotExistsException('Path ' . $path . ' not exists.');
+        if (realpath($domainDTO->filePath) === false) {
+            throw DomainNotExistsException::pathNotFound($domainDTO->filePath);
         }
 
-        if (!is_subclass_of($class, DomainInterface::class)) {
-            throw new DomainExtendException('The domain must extend the abstract class \TruckPag\Core\Contracts\DomainInterface');
+        if (!is_subclass_of($domainNamespace, DomainInterface::class)) {
+            throw DomainExtendException::abstractClassNotExtended();
         }
 
-        if (!is_object($class)) {
-            /** @var DomainInterface $class */
-            $class = new $class();
+        if (!is_object($domainNamespace)) {
+            /** @var DomainInterface $domainNamespace */
+            $domainNamespace = new $domainNamespace();
         }
 
-        $classId = $this->getIdentifier($class);
+        $classId = $this->getIdentifier($domainNamespace);
+
         /*
          * Check for disabled domains
          */
-        if ($class->isDisabled()) {
+        if ($domainNamespace->isDisabled()) {
             return;
         }
 
-        $this->domains[$classId] = $class;
-        $this->pathMap[$classId] = $path;
+        $this->domains[$classId] = $domainNamespace;
+        $this->pathMap[$classId] = $domainDTO->filePath;
         $this->normalizedMap[strtolower($classId)] = $classId;
 
-        return $class;
+        return $domainNamespace;
     }
 
     /**
      * @param object|string $class
      * @return string|object
      */
-    private function getDomainClassName($class)
+    private function getDomainClassName(DomainDTO $domainDTO)
     {
-        if (is_object($class)) {
-            return $class;
+        if (is_object($domainDTO->namespace)) {
+            return $domainDTO->namespace;
         }
 
-        if (is_string($class) && !Str::endsWith($class, 'Domain')) {
-            return $class . '\Domain';
+        if (is_string($domainDTO->namespace) && !Str::endsWith($domainDTO->namespace, 'Domain')) {
+            return sprintf('%s\%s', $domainDTO->namespace, $domainDTO->fileName);
         }
 
-        return $class;
+        return $domainDTO->namespace;
     }
 
     /**
