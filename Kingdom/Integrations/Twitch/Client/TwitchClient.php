@@ -3,8 +3,8 @@
 namespace Kingdom\Integrations\Twitch\Client;
 
 use GuzzleHttp\Client;
-use Kingdom\Integrations\Shared\Domain\DTO\OAuthUserDTO;
-use Kingdom\Integrations\Shared\Domain\Interfaces\OAuthContract;
+use Kingdom\Integrations\Shared\DTO\OAuthUserDTO;
+use Kingdom\Integrations\Shared\Interfaces\OAuthContract;
 use Kingdom\Integrations\Twitch\DTO\TwitchOAuthDTO;
 
 class TwitchClient implements OAuthContract
@@ -14,7 +14,7 @@ class TwitchClient implements OAuthContract
     {
     }
 
-    public static function redirectUrl(): string
+    public function redirectUrl(): string
     {
         return sprintf(
             'https://id.twitch.tv/oauth2/authorize?client_id=%s&redirect_uri=%s&response_type=code&scope=%s',
@@ -46,8 +46,7 @@ class TwitchClient implements OAuthContract
         $response = $this->client->request('GET', $uri, [
             'headers' => [
                 'Client-ID' => config('kingdom.integrations.twitch.client_id'),
-                'Authorization' => 'OAuth ' . $accessToken,
-                'Accept' => 'application/vnd.twitchtv.v5+json'
+                'Authorization' => 'Bearer ' . $accessToken,
             ]
         ]);
 

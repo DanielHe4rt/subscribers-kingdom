@@ -386,6 +386,6 @@
     </style>
 </head>
 <body class="antialiased">
-<a href="{{ \Kingdom\Integrations\Twitch\Client\TwitchClient::redirectUrl() }}">vai caralho</a>
+
 </body>
 </html>

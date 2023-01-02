@@ -1,6 +1,6 @@
 <?php
 
-namespace Kingdom\Integrations\Shared\Domain\DTO;
+namespace Kingdom\Integrations\Shared\DTO;
 
 abstract class OAuthUserDTO
 {

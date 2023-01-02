@@ -2,7 +2,7 @@
 
 namespace Kingdom\Integrations\Twitch\DTO;
 
-use Kingdom\Integrations\Shared\Domain\DTO\OAuthUserDTO;
+use Kingdom\Integrations\Shared\DTO\OAuthUserDTO;
 
 class TwitchOAuthDTO extends OAuthUserDTO
 {
