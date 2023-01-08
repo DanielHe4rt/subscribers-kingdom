@@ -9,10 +9,10 @@ class GetOAuthUser
 {
     public function handle(string $provider, string $code): OAuthUserDTO
     {
-        $oauthProvider = OAuthProviderEnum::from($provider)
-            ->getProvider();
+        $oauthProvider = OAuthProviderEnum::from($provider)->getProvider();
 
-        $access = $oauthProvider->auth($code);
-        return $oauthProvider->getAuthenticatedUser($access['access_token']);
+        return $oauthProvider->getAuthenticatedUser(
+            $oauthProvider->auth($code)
+        );
     }
 }

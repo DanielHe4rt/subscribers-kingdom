@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('subscribers', function (Blueprint $table) {
+        Schema::create('subscriber_providers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name')->nullable();
-            $table->string('phone_number')->unique()->nullable();
-            $table->string('email_id')->nullable();
+            $table->foreignUuid('subscriber_id')->constrained('subscribers');
+            $table->string('provider');
+            $table->string('provider_id');
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subscribers');
+        Schema::dropIfExists('subscriber_providers_tokens');
     }
 };

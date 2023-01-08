@@ -4,6 +4,7 @@ namespace Kingdom\Authentication\Presentation\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Kingdom\Authentication\Application\AuthenticateService;
 use Kingdom\Authentication\Domain\Actions\RedirectOAuthUrl;
 
@@ -17,6 +18,6 @@ class OAuthController extends Controller
     public function getAuthenticate(string $provider, AuthenticateService $action): RedirectResponse
     {
         $action->handle($provider, request()->input('code'));
-        return redirect()->to('/profile');
+        return redirect()->intended('/profile');
     }
 }

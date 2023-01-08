@@ -3,8 +3,10 @@
 namespace Kingdom\Integrations\Twitch\Client;
 
 use GuzzleHttp\Client;
+use Kingdom\Integrations\Shared\DTO\OAuthAccessDTO;
 use Kingdom\Integrations\Shared\DTO\OAuthUserDTO;
 use Kingdom\Integrations\Shared\Interfaces\OAuthContract;
+use Kingdom\Integrations\Twitch\DTO\TwitchOAuthAccessDTO;
 use Kingdom\Integrations\Twitch\DTO\TwitchOAuthDTO;
 
 class TwitchClient implements OAuthContract
@@ -24,7 +26,7 @@ class TwitchClient implements OAuthContract
         );
     }
 
-    public function auth(string $code)
+    public function auth(string $code): OAuthAccessDTO
     {
         $uri = "https://id.twitch.tv/oauth2/token";
         $response = $this->client->request('POST', $uri, [
@@ -37,20 +39,22 @@ class TwitchClient implements OAuthContract
             ]
         ]);
 
-        return json_decode($response->getBody(), true);
+        return TwitchOAuthAccessDTO::make(
+            json_decode($response->getBody()->getContents(), true)
+        );
     }
 
-    public function getAuthenticatedUser(string $accessToken): OAuthUserDTO
+    public function getAuthenticatedUser(OAuthAccessDTO $credentials): OAuthUserDTO
     {
         $uri = "https://api.twitch.tv/helix/users";
         $response = $this->client->request('GET', $uri, [
             'headers' => [
                 'Client-ID' => config('kingdom.integrations.twitch.client_id'),
-                'Authorization' => 'Bearer ' . $accessToken,
+                'Authorization' => 'Bearer ' . $credentials->accessToken,
             ]
         ]);
 
         $payload = json_decode($response->getBody()->getContents(), true);
-        return TwitchOAuthDTO::make($payload);
+        return TwitchOAuthDTO::make($credentials, $payload);
     }
 }

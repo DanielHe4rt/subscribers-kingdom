@@ -5,7 +5,9 @@ namespace Kingdom\Integrations\Shared\DTO;
 abstract class OAuthUserDTO
 {
     public function __construct(
-        public string  $id,
+        public OAuthAccessDTO $credentials,
+        public string  $providerId,
+        public string  $providerName,
         public string  $username,
         public string  $name,
         public ?string $email,
@@ -14,5 +16,14 @@ abstract class OAuthUserDTO
     {
     }
 
-    public abstract static function make(array $payload): self;
+    public abstract static function make(OAuthAccessDTO $credentials, array $payload): self;
+
+    public function toDatabase(): array
+    {
+        return [
+            'provider' => $this->providerName,
+            'provider_id' => $this->providerId,
+            'email' => $this->email,
+        ];
+    }
 }

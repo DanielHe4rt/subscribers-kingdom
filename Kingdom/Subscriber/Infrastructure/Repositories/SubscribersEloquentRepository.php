@@ -4,6 +4,7 @@ namespace Kingdom\Subscriber\Infrastructure\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Kingdom\Subscriber\Domain\DTO\SubscriberDTO;
 use Kingdom\Subscriber\Domain\Repositories\SubscribersRepository;
 use Kingdom\Subscriber\Infrastructure\Models\Subscriber;
 
@@ -18,5 +19,10 @@ class SubscribersEloquentRepository implements SubscribersRepository
     public function all(): Collection
     {
         return Subscriber::get();
+    }
+
+    public function create(SubscriberDTO $dto): Subscriber
+    {
+        return Subscriber::create($dto->toDatabase());
     }
 }

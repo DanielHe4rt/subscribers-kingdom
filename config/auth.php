@@ -15,7 +15,6 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
     ],
 
     /*
@@ -40,6 +39,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'subscribers' => [
+            'driver' => 'session',
+            'provider' => 'subscribers',
+        ],
     ],
 
     /*
@@ -62,13 +65,13 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => Kingdom\Subscriber\Infrastructure\Models\Subscriber::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+         'subscribers' => [
+             'driver' => 'eloquent',
+             'model' => \Kingdom\Subscriber\Infrastructure\Models\Subscriber::class,
+         ],
     ],
 
     /*
@@ -88,6 +91,12 @@ return [
 
     'passwords' => [
         'users' => [
+            'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'subscribers' => [
             'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,
