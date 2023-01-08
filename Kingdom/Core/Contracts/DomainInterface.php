@@ -18,8 +18,5 @@ abstract class DomainInterface
         return $this->disabled;
     }
 
-    public function registerProvider(): array
-    {
-        return [];
-    }
+    public abstract function registerProvider(): array;
 }

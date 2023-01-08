@@ -3,7 +3,7 @@
 namespace Kingdom\Integrations;
 
 use Kingdom\Core\Contracts\DomainInterface;
-use Kingdom\Integrations\Twitch\Infrastructure\Providers\TwitchIntegrationProvider;
+use Kingdom\Integrations\Twitch\Common\TwitchIntegrationProvider;
 
 class IntegrationsDomain extends DomainInterface
 {

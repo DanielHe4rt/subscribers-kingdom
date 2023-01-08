@@ -1,6 +1,6 @@
 <?php
 
-namespace Kingdom\Integrations\Twitch\Domain\DTO;
+namespace Kingdom\Integrations\Twitch\OAuth\Domain\DTO;
 
 use Kingdom\Authentication\OAuth\Domain\DTO\OAuthAccessDTO;
 

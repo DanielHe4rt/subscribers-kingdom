@@ -3,13 +3,17 @@
 namespace Kingdom\Profile\Presentation\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Kingdom\Subscriber\Infrastructure\Models\Subscriber;
 
 class ProfileController extends Controller
 {
-    public function getProfile(): JsonResponse
+    public function getProfile(): View
     {
-        return response()->json(auth()->user()->toArray());
+        /** @var Subscriber $subscriber */
+        $subscriber = auth()->user();
+        return view('profile::main', [
+            'user' => $subscriber
+        ]);
     }
 }

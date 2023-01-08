@@ -9,6 +9,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Kingdom\Subscriber\Infrastructure\Factories\SubscriberFactory;
 
+/**
+ * @property string $id
+ * @property string $username
+ * @property int $email_id
+ * @property string $phone_number
+ */
 class Subscriber extends Authenticatable
 {
     use HasFactory, Notifiable, HasUuids;
@@ -18,6 +24,7 @@ class Subscriber extends Authenticatable
         'username',
         'email_id',
         'phone_number',
+        'avatar_url'
     ];
 
     protected static function newFactory(): Factory

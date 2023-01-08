@@ -1,17 +1,15 @@
 <?php
 
-namespace Kingdom\Integrations\Twitch\Infrastructure\Client;
+namespace Kingdom\Integrations\Twitch\OAuth\Infrastructure;
 
 use GuzzleHttp\Client;
 use Kingdom\Authentication\OAuth\Domain\DTO\OAuthAccessDTO;
-use Kingdom\Authentication\OAuth\Domain\DTO\OAuthUserDTO;
-use Kingdom\Authentication\OAuth\Domain\Interfaces\OAuthClientContract;
-use Kingdom\Integrations\Twitch\Domain\DTO\TwitchOAuthAccessDTO;
-use Kingdom\Integrations\Twitch\Domain\DTO\TwitchOAuthDTO;
+use Kingdom\Integrations\Twitch\OAuth\Domain\DTO\TwitchOAuthAccessDTO;
+use Kingdom\Integrations\Twitch\OAuth\Domain\DTO\TwitchOAuthDTO;
+use Kingdom\Integrations\Twitch\OAuth\Domain\TwitchOAuthService;
 
-class TwitchClient implements OAuthClientContract
+class TwitchOAuthClient implements TwitchOAuthService
 {
-
     public function __construct(private readonly Client $client)
     {
     }
@@ -26,7 +24,7 @@ class TwitchClient implements OAuthClientContract
         );
     }
 
-    public function auth(string $code): OAuthAccessDTO
+    public function auth(string $code): TwitchOAuthAccessDTO
     {
         $uri = "https://id.twitch.tv/oauth2/token";
         $response = $this->client->request('POST', $uri, [
@@ -44,7 +42,7 @@ class TwitchClient implements OAuthClientContract
         );
     }
 
-    public function getAuthenticatedUser(OAuthAccessDTO $credentials): OAuthUserDTO
+    public function getAuthenticatedUser(OAuthAccessDTO $credentials): TwitchOAuthDTO
     {
         $uri = "https://api.twitch.tv/helix/users";
         $response = $this->client->request('GET', $uri, [

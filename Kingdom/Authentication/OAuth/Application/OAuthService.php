@@ -33,7 +33,7 @@ final readonly class OAuthService
 
         $subscriberId = Auth::check()
             ? Auth::id()
-            : $this->subscribersRepository->create(new SubscriberDTO($providerUser->username))->getKey();
+            : $this->subscribersRepository->create(SubscriberDTO::makeFromOAuth($providerUser))->getKey();
 
         $persistedProvider = $this->providerRepository->create($subscriberId, $providerUser);
         $this->tokenRepository->create($persistedProvider->getKey(), $providerUser->credentials);
