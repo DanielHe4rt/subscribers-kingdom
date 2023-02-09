@@ -10,14 +10,17 @@ use Kingdom\Subscription\Domain\Actions\GetSubscriptionStatus;
 
 class ProfileController extends Controller
 {
-    public function getProfile(SubscriptionState $action): View
+    public function getProfile(SubscriptionState $subscriptionState): View
     {
-        $data = $action->handle(auth()->id(), 'twitch');
+        $currentSubscriptionStatus = $subscriptionState->handle(auth()->id(), 'twitch');
 
         /** @var Subscriber $subscriber */
+
         $subscriber = auth()->user();
         return view('profile::main', [
-            'user' => $subscriber
+            'user' => $subscriber,
+            'currentSubscription' => $currentSubscriptionStatus,
+            'twitchProvider' => $subscriber->providerByName('twitch'),
         ]);
     }
 }

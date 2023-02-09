@@ -10,6 +10,8 @@ class LandingRouteProvider extends RouteServiceProvider
 {
     public function map(): void
     {
-        Route::get('/', [LandingController::class, 'viewLanding'])->middleware('web');
+        Route::get('/', [LandingController::class, 'viewLanding'])
+            ->middleware('web')
+            ->name('landing');
     }
 }

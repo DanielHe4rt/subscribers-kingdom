@@ -20,6 +20,7 @@ use Kingdom\Subscriber\Infrastructure\Factories\SubscriberFactory;
  * @property string $username
  * @property int $email_id
  * @property string $phone_number
+ * @property \Carbon\Carbon $phone_verified_at
  */
 class Subscriber extends Authenticatable
 {
@@ -30,7 +31,12 @@ class Subscriber extends Authenticatable
         'username',
         'email_id',
         'phone_number',
+        'phone_verified_at',
         'avatar_url',
+    ];
+
+    protected $casts = [
+        'phone_verified_at' => 'datetime',
     ];
 
     protected static function newFactory(): Factory
@@ -50,10 +56,10 @@ class Subscriber extends Authenticatable
         return $this->hasMany(Provider::class);
     }
 
-    public function providerByName(string $provider): HasOne
+    public function providerByName(string $provider): Provider
     {
         return $this->hasOne(Provider::class)
-            ->where('provider', $provider);
+            ->where('provider', $provider)->first();
     }
 
     public function credentialsByProvider(string $provider): array

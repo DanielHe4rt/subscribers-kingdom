@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignUuid('subscriber_id')->constrained('subscribers');
             $table->string('provider');
             $table->string('provider_id');
+            $table->string('provider_username');
             $table->string('email')->nullable();
             $table->timestamps();
         });

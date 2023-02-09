@@ -9,6 +9,7 @@ use Kingdom\Authentication\OAuth\Domain\Repositories\ProviderRepository;
 use Kingdom\Authentication\OAuth\Infrastructure\Models\Provider;
 use Kingdom\Integrations\Twitch\Common\TwitchService;
 use Kingdom\Integrations\Twitch\OAuth\Domain\DTO\TwitchOAuthAccessDTO;
+use Kingdom\Integrations\Twitch\Subscriber\Domain\DTO\TwitchSubscriberDTO;
 use Kingdom\Subscriber\Domain\DTO\SubscriberProviderDTO;
 use Kingdom\Subscriber\Domain\Repositories\SubscribersRepository;
 
@@ -21,7 +22,7 @@ class GetSubscriptionStatus
     {
     }
 
-    public function handle(string $subscriberId, string $provider)
+    public function handle(string $subscriberId, string $provider): ?TwitchSubscriberDTO
     {
         $subscriber = $this->subscribersRepository->findById($subscriberId);
         [$accessDTO, $providerDTO] = $this->transformProviderData(
@@ -40,7 +41,7 @@ class GetSubscriptionStatus
     }
 
 
-    private function getSubscriptionState(OAuthAccessDTO $accessDTO, SubscriberProviderDTO $provider)
+    private function getSubscriptionState(OAuthAccessDTO $accessDTO, SubscriberProviderDTO $provider): ?TwitchSubscriberDTO
     {
         try {
             return $this->twitchService
@@ -51,7 +52,8 @@ class GetSubscriptionStatus
                     config('kingdom.integrations.twitch.channel_id')
                 );
         } catch (ClientException $e) {
-            return false;
+            // not subscriber on twitch yet
+            return null;
         }
     }
 }

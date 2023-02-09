@@ -13,7 +13,7 @@ class ProfileRouteProvider extends RouteServiceProvider
         Route::prefix('profile')
             ->middleware(['web','auth:web'])
             ->group(function () {
-                Route::get('/', [ProfileController::class, 'getProfile']);
+                Route::get('/', [ProfileController::class, 'getProfile'])->name('profile');
             });
     }
 }

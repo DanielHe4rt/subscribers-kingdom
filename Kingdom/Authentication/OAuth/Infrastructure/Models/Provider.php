@@ -17,6 +17,7 @@ use Kingdom\Subscriber\Infrastructure\Models\Subscriber;
  * @property Subscriber $subscriber
  * @property Collection<Token> $tokens
  * @property string $user_id
+ * @property string $provider_username
  * @property string $provider_id
  * @property string $provider
  */
@@ -31,6 +32,7 @@ class Provider extends Model
         'subscriber_id',
         'provider',
         'provider_id',
+        'provider_username',
         'email',
     ];
 

@@ -23,6 +23,7 @@ abstract class OAuthUserDTO
         return [
             'provider' => $this->providerName,
             'provider_id' => $this->providerId,
+            'provider_username' => $this->username,
             'email' => $this->email,
         ];
     }

@@ -16,4 +16,6 @@ interface SubscribersRepository
     public function create(SubscriberDTO $dto): Subscriber;
 
     public function findById(string $subscriberId): Subscriber;
+
+    public function verifyNumber(string $subscriberId): void;
 }

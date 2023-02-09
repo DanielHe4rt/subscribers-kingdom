@@ -30,4 +30,9 @@ class TwitchSubscriberDTO
             $payload['gifter_name'] ?? null,
         );
     }
+
+    public function getSubscriptionDescription(): string
+    {
+        return "Subscribed: " . $this->tier->friendlyTiers();
+    }
 }

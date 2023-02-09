@@ -11,6 +11,7 @@ class SubscriberDTO
         public readonly ?string $avatarUrl = null,
         public readonly ?string $emailProviderId = null,
         public readonly ?string $phoneNumber = null,
+        public readonly ?string $phoneVerifiedAt = null,
     )
     {
     }
@@ -21,7 +22,8 @@ class SubscriberDTO
             username: $dto->username,
             avatarUrl: $dto->avatarUrl,
             emailProviderId: null,
-            phoneNumber: null
+            phoneNumber: null,
+            phoneVerifiedAt: null,
         );
     }
 
@@ -32,6 +34,7 @@ class SubscriberDTO
             'email_id' => $this->emailProviderId,
             'phone_number' => $this->phoneNumber,
             'avatar_url' => $this->avatarUrl,
+            'phone_verified_at' => $this->phoneVerifiedAt,
         ];
     }
 }
