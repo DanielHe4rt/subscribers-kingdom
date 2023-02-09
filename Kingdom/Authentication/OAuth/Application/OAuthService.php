@@ -2,10 +2,12 @@
 
 namespace Kingdom\Authentication\OAuth\Application;
 
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
 use Kingdom\Authentication\OAuth\Domain\Actions\GetOAuthUser;
 use Kingdom\Authentication\OAuth\Domain\Repositories\ProviderRepository;
 use Kingdom\Authentication\OAuth\Domain\Repositories\TokenRepository;
+use Kingdom\Authentication\OAuth\Infrastructure\Enums\OAuthProviderEnum;
 use Kingdom\Subscriber\Domain\DTO\SubscriberDTO;
 use Kingdom\Subscriber\Domain\Repositories\SubscribersRepository;
 
@@ -22,7 +24,17 @@ final readonly class OAuthService
 
     public function handle(string $provider, string $code)
     {
-        $providerUser = $this->getUserAction->handle($provider, $code);
+        try {
+            $providerUser = $this->getUserAction->handle($provider, $code);
+        } catch (ClientException $e) {
+            if (str_contains($e->getMessage(), 'Invalid authorization code')) {
+                $OAuthProviderEnum = OAuthProviderEnum::from($provider);
+                return redirect()->to($OAuthProviderEnum->getProvider()->redirectUrl());
+            }
+
+            throw $e;
+        }
+
         $persistedProvider = $this->providerRepository->findByProvider($providerUser);
 
         if ($persistedProvider) {

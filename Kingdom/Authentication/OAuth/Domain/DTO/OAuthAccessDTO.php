@@ -7,7 +7,7 @@ abstract class OAuthAccessDTO
     public function __construct(
         public readonly string $accessToken,
         public readonly string $refreshToken,
-        public readonly int    $expiresIn
+        public readonly ?int    $expiresIn
     )
     {
     }

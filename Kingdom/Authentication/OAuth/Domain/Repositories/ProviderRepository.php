@@ -9,5 +9,7 @@ interface ProviderRepository
 {
     public function findByProvider(OAuthUserDTO $user): ?Provider;
 
+    public function findByProviderId(string $providerId): ?Provider;
+
     public function create(string $subscriberId, OAuthUserDTO $dto): Provider;
 }

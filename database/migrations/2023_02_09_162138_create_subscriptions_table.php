@@ -13,12 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('subscriber_providers_tokens', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('provider_id')->constrained('subscriber_providers');
-            $table->string('access_token');
-            $table->string('refresh_token')->nullable();
-            $table->string('expires_in')->nullable();
+        Schema::create('subscriptions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignUuid('subscriber_id')
+                ->nullable()
+                ->constrained('subscribers');
+            $table->string('provider');
+            $table->string('username');
+            $table->timestamp('subscribed_at');
             $table->timestamps();
         });
     }
@@ -30,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subscriber_providers_tokens');
+        Schema::dropIfExists('subscriptions');
     }
 };

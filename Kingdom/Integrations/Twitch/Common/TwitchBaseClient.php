@@ -3,8 +3,12 @@
 namespace Kingdom\Integrations\Twitch\Common;
 
 use GuzzleHttp\Client;
+use Kingdom\Integrations\Twitch\Subscriber\Infrastructure\TwitchSubscribersClient;
+use Kingdom\Integrations\Twitch\OAuth\Domain\TwitchOAuthService;
+use Kingdom\Integrations\Twitch\Subscriber\Domain\TwitchSubscribersService;
+use Kingdom\Integrations\Twitch\OAuth\Infrastructure\TwitchOAuthClient;
 
-class TwitchBaseClient implements TwitchService
+final class TwitchBaseClient implements TwitchService
 {
 
     public function __construct(private readonly Client $client)
@@ -18,6 +22,6 @@ class TwitchBaseClient implements TwitchService
 
     public function subscribers(): TwitchSubscribersService
     {
-        // TODO: Implement subscribers() method.
+        return new TwitchSubscribersClient($this->client);
     }
 }

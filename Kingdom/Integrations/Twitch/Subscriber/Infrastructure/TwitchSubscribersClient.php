@@ -3,8 +3,10 @@
 namespace Kingdom\Integrations\Twitch\Subscriber\Infrastructure;
 
 use GuzzleHttp\Client;
-use Kingdom\Integrations\Twitch\Domain\DTO\TwitchOAuthDTO;
-use Kingdom\Integrations\Twitch\Domain\Interfaces\TwitchSubscribersService;
+
+use Kingdom\Authentication\OAuth\Domain\DTO\OAuthAccessDTO;
+use Kingdom\Integrations\Twitch\Subscriber\Domain\DTO\TwitchSubscriberDTO;
+use Kingdom\Integrations\Twitch\Subscriber\Domain\TwitchSubscribersService;
 
 class TwitchSubscribersClient implements TwitchSubscribersService
 {
@@ -12,17 +14,25 @@ class TwitchSubscribersClient implements TwitchSubscribersService
     {
     }
 
-    public function getSubscriptionState(string $twitchId, string $channelId)
+    public function getSubscriptionState(OAuthAccessDTO $dto, string $twitchId, string $channelId): ?TwitchSubscriberDTO
     {
-        $uri = "https://api.twitch.tv/helix/users";
+        $uri = 'https://api.twitch.tv/helix/subscriptions/user';
         $response = $this->client->request('GET', $uri, [
             'headers' => [
                 'Client-ID' => config('kingdom.integrations.twitch.client_id'),
-                'Authorization' => 'Bearer ' . $credentials->accessToken,
-            ]
+                'Authorization' => 'Bearer ' . $dto->accessToken,
+            ],
+            'query' => [
+                'user_id' => $twitchId,
+                'broadcaster_id' => $channelId,
+            ],
         ]);
 
-        $payload = json_decode($response->getBody()->getContents(), true);
-        return TwitchOAuthDTO::make($credentials, $payload);
+        $response = json_decode($response->getBody()->getContents(), true)['data'];
+
+        if (count($response) == 0) {
+            return null;
+        }
+        return TwitchSubscriberDTO::make($response[0]);
     }
 }

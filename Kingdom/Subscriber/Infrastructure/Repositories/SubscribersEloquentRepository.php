@@ -25,4 +25,9 @@ class SubscribersEloquentRepository implements SubscribersRepository
     {
         return Subscriber::create($dto->toDatabase());
     }
+
+    public function findById(string $subscriberId): Subscriber
+    {
+        return Subscriber::find($subscriberId);
+    }
 }

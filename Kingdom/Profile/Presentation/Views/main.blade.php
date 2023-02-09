@@ -1,4 +1,4 @@
-@extends('landing::landing')
+@extends('landing::layout.app')
 
 @section('content')
     <section style="background-color: #eee;">
@@ -10,8 +10,7 @@
                             <img src="{{ $user->avatar_url }}" alt="avatar"
                                  class="rounded-circle img-fluid" style="width: 150px;">
                             <h5 class="my-3">{{ $user->username }}</h5>
-                            <p class="text-muted mb-1">Full Stack Developer</p>
-                            <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
+                            <p class="text-muted mb-1"></p>
                             <div class="d-flex justify-content-center mb-2">
                                 <button type="button" class="btn btn-primary">Follow</button>
                                 <button type="button" class="btn btn-outline-primary ms-1">Message</button>

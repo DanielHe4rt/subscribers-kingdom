@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kingdom\Authentication\OAuth\Infrastructure\Factories\TokenFactory;
 
+/**
+ * @property string $id
+ * @property string $provider_id
+ * @property string $access_token
+ * @property string $refresh_token
+ */
 class Token extends Model
 {
     use HasFactory, HasUuids;
@@ -19,7 +25,10 @@ class Token extends Model
         'provider_id',
         'access_token',
         'refresh_token',
+        'expires_in'
     ];
+
+    // TODO: expires token should have an human interface and auto refresh
 
     public function provider(): BelongsTo
     {

@@ -23,4 +23,9 @@ class ProviderEloquentRepository implements ProviderRepository
             ...$user->toDatabase()
         ]);
     }
+
+    public function findByProviderId(string $providerId): ?Provider
+    {
+        return Provider::find($providerId);
+    }
 }

@@ -14,4 +14,6 @@ interface SubscribersRepository
     public function all(): Collection;
 
     public function create(SubscriberDTO $dto): Subscriber;
+
+    public function findById(string $subscriberId): Subscriber;
 }
