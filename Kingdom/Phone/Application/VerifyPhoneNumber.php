@@ -20,11 +20,13 @@ class VerifyPhoneNumber
         $mobileDTO = $this->getValidationFromCache($code);
 
         if (!$mobileDTO) {
-            throw new \Exception('fodase');
+            throw new \Exception('token não vinculado à nenhum dispositivo');
         }
 
-
-        $this->subscribersRepository->verifyNumber($mobileDTO->subscriber->id);
+        $this->subscribersRepository->verifyNumber(
+            $mobileDTO->subscriber->id,
+            $mobileDTO->phoneNumber
+        );
     }
 
     private function getValidationFromCache(string $code): ?MobileVerificationDTO

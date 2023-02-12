@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignUuid('subscriber_id')
                 ->nullable()
-                ->constrained('subscribers');
+                ->constrained('subscribers')
+                ->cascadeOnDelete();
+
             $table->string('provider');
             $table->string('username');
             $table->timestamp('subscribed_at');

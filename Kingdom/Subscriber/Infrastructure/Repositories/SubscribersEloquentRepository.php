@@ -31,7 +31,7 @@ class SubscribersEloquentRepository implements SubscribersRepository
         return Subscriber::find($subscriberId);
     }
 
-    public function verifyNumber(string $subscriberId): void
+    public function verifyNumber(string $subscriberId, string $phoneNumber): void
     {
         Subscriber::find($subscriberId)->update(['phone_verified_at' => now()]);
     }

@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('subscriber_providers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('subscriber_id')->constrained('subscribers');
+            $table->foreignUuid('subscriber_id')
+                ->constrained('subscribers')
+                ->cascadeOnDelete();
             $table->string('provider');
             $table->string('provider_id');
             $table->string('provider_username');
