@@ -11,8 +11,6 @@ class GetOAuthUser
     {
         $oauthProvider = OAuthProviderEnum::from($provider)->getProvider();
 
-        return $oauthProvider->getAuthenticatedUser(
-            $oauthProvider->auth($code)
-        );
+        return $oauthProvider->getAuthenticatedUser($oauthProvider->auth($code));
     }
 }

@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Kingdom\Integrations\Twitch\Common\TwitchService;
+use Kingdom\Integrations\Twitch\EventSub\Domain\DTOs\EventSubDTO;
+use Kingdom\Integrations\Twitch\EventSub\Domain\Enums\EventSubTypesEnum;
 
 class ImportPastSubscribersCommand extends Command
 {
@@ -20,14 +23,10 @@ class ImportPastSubscribersCommand extends Command
      */
     protected $description = 'Import the past subscribers list into the system.';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
+
     public function handle(): int
     {
-
+        // TODO: import service
 
         return self::SUCCESS;
     }

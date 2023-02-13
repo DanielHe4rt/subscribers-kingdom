@@ -55,4 +55,20 @@ class TwitchOAuthClient implements TwitchOAuthService
         $payload = json_decode($response->getBody()->getContents(), true);
         return TwitchOAuthDTO::make($credentials, $payload);
     }
+
+    public function authApp(): OAuthAccessDTO
+    {
+        $uri = "https://id.twitch.tv/oauth2/token";
+        $response = $this->client->request('POST', $uri, [
+            'form_params' => [
+                'client_id' => config('kingdom.integrations.twitch.client_id'),
+                'client_secret' => config('kingdom.integrations.twitch.client_secret'),
+                'grant_type' => 'client_credentials',
+            ]
+        ]);
+        $decodedAccessToken = json_decode($response->getBody()->getContents(), true);
+        $decodedAccessToken['refresh_token'] = '';
+
+        return TwitchOAuthAccessDTO::make($decodedAccessToken);
+    }
 }
