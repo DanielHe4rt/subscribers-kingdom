@@ -19,5 +19,7 @@ interface SubscribersRepository
 
     public function verifyNumber(string $subscriberId, string $phoneNumber): void;
 
-    public function isPhoneNumberVerified(string $subscriberId, string $phoneNumber): bool;
+    public function isSubscriberPhoneNumberVerified(string $subscriberId): bool;
+
+    public function isPhoneNumberVerified(string $phoneNumber): bool;
 }

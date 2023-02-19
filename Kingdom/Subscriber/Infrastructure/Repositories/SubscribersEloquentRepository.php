@@ -39,11 +39,16 @@ class SubscribersEloquentRepository implements SubscribersRepository
         ]);
     }
 
-    public function isPhoneNumberVerified(string $subscriberId, string $phoneNumber): bool
+    public function isSubscriberPhoneNumberVerified(string $subscriberId): bool
     {
         return Subscriber::whereNotNull('phone_verified_at')
             ->whereNotNull('phone_number')
             ->where('id', '=' , $subscriberId)
             ->exists();
+    }
+
+    public function isPhoneNumberVerified(string $phoneNumber): bool
+    {
+        return Subscriber::where('phone_number', $phoneNumber)->exists();
     }
 }

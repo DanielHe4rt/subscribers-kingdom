@@ -30,18 +30,18 @@ class SendPhoneVerification
             '+55' . $phoneNumber
         );
 
-        $isPhoneNumberVerified = $this->subscribersRepository
-            ->isPhoneNumberVerified($subscriberId, $mobileDTO->phoneNumber);
+        $isSubscriberPhoneNumberVerified = $this->subscribersRepository->isSubscriberPhoneNumberVerified($subscriberId);
+        if ($isSubscriberPhoneNumberVerified) {
+            throw PhoneNumberException::alreadyVerified();
+        }
 
+        $isPhoneNumberVerified = $this->subscribersRepository->isPhoneNumberVerified($mobileDTO->phoneNumber);
         if ($isPhoneNumberVerified) {
-            throw PhoneNumberException::alreadyRegistered();
+            throw PhoneNumberException::alreadyRegisteredOnSomeoneElseAccount();
         }
 
         $generatedSubscriberToken = $this->generateSubscriberToken($mobileDTO);
-
-        Queue::connection('redis')->push(
-            new SendMessageJob($mobileDTO, $generatedSubscriberToken)
-        );
+        Queue::connection('redis')->push(new SendMessageJob($mobileDTO, $generatedSubscriberToken));
     }
 
 
