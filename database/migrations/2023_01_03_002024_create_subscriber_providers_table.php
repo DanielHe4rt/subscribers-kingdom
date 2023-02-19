@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subscriber_providers_tokens');
+        Schema::dropIfExists('subscriber_providers');
     }
 };

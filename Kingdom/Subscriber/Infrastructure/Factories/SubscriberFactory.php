@@ -13,7 +13,7 @@ class SubscriberFactory extends Factory
     {
         return [
             'id' => $this->faker->uuid(),
-            'name' => $this->faker->name(),
+            'username' => $this->faker->name(),
             'phone_number' => $this->faker->phoneNumber(),
             'phone_verified_at'=> $this->faker->dateTime(),
             'email_id' => null,

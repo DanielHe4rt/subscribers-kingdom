@@ -8,7 +8,7 @@ use Kingdom\Shared\Domain\Contracts\MessageContract;
 
 class GetMailingService
 {
-    public function handle(): MessageContract
+    public function retrieve(): MessageContract
     {
         return match(config('kingdom.sms_provider')) {
             'telesign' => app(TelesignService::class)->messages(),

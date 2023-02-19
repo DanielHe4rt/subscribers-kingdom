@@ -13,6 +13,7 @@ class TelesignMessageClient implements MessageContract
 
     public function sendSMS(string $to, string $message): array
     {
+
         $uri = 'v1/messaging';
         $to = str_replace('+', '', $to);
         $payload = [

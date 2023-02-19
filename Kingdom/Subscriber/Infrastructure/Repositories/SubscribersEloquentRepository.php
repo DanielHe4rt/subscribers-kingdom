@@ -33,6 +33,17 @@ class SubscribersEloquentRepository implements SubscribersRepository
 
     public function verifyNumber(string $subscriberId, string $phoneNumber): void
     {
-        Subscriber::find($subscriberId)->update(['phone_verified_at' => now()]);
+        Subscriber::find($subscriberId)->update([
+            'phone_verified_at' => now(),
+            'phone_number' => $phoneNumber
+        ]);
+    }
+
+    public function isPhoneNumberVerified(string $subscriberId, string $phoneNumber): bool
+    {
+        return Subscriber::whereNotNull('phone_verified_at')
+            ->whereNotNull('phone_number')
+            ->where('id', '=' , $subscriberId)
+            ->exists();
     }
 }

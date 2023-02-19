@@ -4,10 +4,13 @@ namespace Kingdom\Phone\Application;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Str;
 use Kingdom\Integrations\Twilio\Common\TwilioService;
+use Kingdom\Phone\Application\Exceptions\PhoneNumberException;
 use Kingdom\Phone\Domain\Action\GetMailingService;
 use Kingdom\Phone\Domain\DTOs\MobileVerificationDTO;
+use Kingdom\Phone\Infrastructure\Jobs\SendMessageJob;
 use Kingdom\Subscriber\Domain\Repositories\SubscribersRepository;
 use Ramsey\Uuid\Uuid;
 
@@ -15,7 +18,6 @@ class SendPhoneVerification
 {
     public function __construct(
         private readonly SubscribersRepository $subscribersRepository,
-        private readonly GetMailingService     $mailingService,
     )
     {
     }
@@ -28,36 +30,29 @@ class SendPhoneVerification
             '+55' . $phoneNumber
         );
 
-        // TODO: validate if number is already registered
+        $isPhoneNumberVerified = $this->subscribersRepository
+            ->isPhoneNumberVerified($subscriberId, $mobileDTO->phoneNumber);
+
+        if ($isPhoneNumberVerified) {
+            throw PhoneNumberException::alreadyRegistered();
+        }
 
         $generatedSubscriberToken = $this->generateSubscriberToken($mobileDTO);
-        $message = $this->buildMessage($mobileDTO, $generatedSubscriberToken);
-        $mailingService = $this->mailingService->handle();
 
-        $mailingService->sendSMS($mobileDTO->phoneNumber, $message);
+        Queue::connection('redis')->push(
+            new SendMessageJob($mobileDTO, $generatedSubscriberToken)
+        );
     }
 
-    public function getProvider()
-    {
-
-    }
 
     private function generateSubscriberToken(MobileVerificationDTO $mobileDTO): string
     {
-        $hashedToken = strtolower(Str::random(6));
-        Cache::tags(['phone-tokens'])->put($hashedToken, $mobileDTO, 60 * 5);
+        $token = rand(111111, 999999);
+        Cache::tags(['phone-tokens'])->put($token, $mobileDTO, 60 * 5);
         Cache::tags(['awaiting-validation'])->put($mobileDTO->subscriber->id, true, 60 * 5);
 
-        return $hashedToken;
+        return $token;
     }
 
-    private function buildMessage(MobileVerificationDTO $mobileDTO, string $accessCode): string
-    {
-        return sprintf(
-            "Salve %s, tranquilidade? Cê tá recebendo essa mensagem pra verificar seu zap" .
-            " no grupo de subs do daniel coração. Pra verificar use esse código: %s",
-            $mobileDTO->subscriber->username,
-            $accessCode
-        );
-    }
+
 }

@@ -4,3 +4,11 @@
         {{ session()->get('alert.success') }}
     </div>
 @endif
+
+
+@if(session()->has('alert.danger'))
+
+    <div class="alert alert-danger">
+        {{ session()->get('alert.danger') }}
+    </div>
+@endif

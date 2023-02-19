@@ -18,4 +18,6 @@ interface SubscribersRepository
     public function findById(string $subscriberId): Subscriber;
 
     public function verifyNumber(string $subscriberId, string $phoneNumber): void;
+
+    public function isPhoneNumberVerified(string $subscriberId, string $phoneNumber): bool;
 }
