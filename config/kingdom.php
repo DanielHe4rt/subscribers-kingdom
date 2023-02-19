@@ -2,6 +2,7 @@
 
 return [
     'secret_passphrase' => 'fodase',
+    'sms_provider' => 'telesign',
     'integrations' => [
         'twitch' => [
             'channel_id' => '227168488',
@@ -14,6 +15,12 @@ return [
             'sid' => env('TWILIO_SID', '123'),
             'secret' => env('TWILIO_SECRET', '123'),
             'sender_phone' => env('TWILIO_SENDER', '+14155238886')
-        ]
+        ],
+        'telesign' => [
+            'customer_id' => env('TELESIGN_SID', '123'),
+            'secret' => env('TELESIGN_SECRET', '123'),
+            'sender_phone' => env('TELESIGN_SENDER', '+14155238886')
+        ],
+
     ]
 ];

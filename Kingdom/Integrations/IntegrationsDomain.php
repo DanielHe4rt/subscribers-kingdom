@@ -3,6 +3,7 @@
 namespace Kingdom\Integrations;
 
 use Kingdom\Core\Contracts\DomainInterface;
+use Kingdom\Integrations\Telesign\Common\TelesignIntegrationProvider;
 use Kingdom\Integrations\Twilio\Common\TwilioIntegrationProvider;
 use Kingdom\Integrations\Twitch\Common\TwitchIntegrationProvider;
 
@@ -12,7 +13,8 @@ class IntegrationsDomain extends DomainInterface
     {
         return [
             TwitchIntegrationProvider::class,
-            TwilioIntegrationProvider::class
+            TwilioIntegrationProvider::class,
+            TelesignIntegrationProvider::class
         ];
     }
 }

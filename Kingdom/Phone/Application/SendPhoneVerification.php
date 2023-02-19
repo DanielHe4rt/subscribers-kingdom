@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Kingdom\Integrations\Twilio\Common\TwilioService;
+use Kingdom\Phone\Domain\Action\GetMailingService;
 use Kingdom\Phone\Domain\DTOs\MobileVerificationDTO;
 use Kingdom\Subscriber\Domain\Repositories\SubscribersRepository;
 use Ramsey\Uuid\Uuid;
@@ -14,7 +15,7 @@ class SendPhoneVerification
 {
     public function __construct(
         private readonly SubscribersRepository $subscribersRepository,
-        private readonly TwilioService         $twilioService,
+        private readonly GetMailingService     $mailingService,
     )
     {
     }
@@ -31,8 +32,14 @@ class SendPhoneVerification
 
         $generatedSubscriberToken = $this->generateSubscriberToken($mobileDTO);
         $message = $this->buildMessage($mobileDTO, $generatedSubscriberToken);
+        $mailingService = $this->mailingService->handle();
 
-        $this->twilioService->messages()->sendMessage($mobileDTO->phoneNumber, $message);
+        $mailingService->sendSMS($mobileDTO->phoneNumber, $message);
+    }
+
+    public function getProvider()
+    {
+
     }
 
     private function generateSubscriberToken(MobileVerificationDTO $mobileDTO): string
