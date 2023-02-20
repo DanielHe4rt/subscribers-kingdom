@@ -36,7 +36,6 @@ class GetSubscriptionStatus
 
     private function transformProviderData(array $providerData): array
     {
-        Log::alert('[Twitch Token Alert]', $providerData);
         return [
             TwitchOAuthAccessDTO::make($providerData['access']),
             SubscriberProviderDTO::make($providerData['provider'])
@@ -55,9 +54,6 @@ class GetSubscriptionStatus
                     config('kingdom.integrations.twitch.channel_id'),
                 );
         } catch (ClientException $e) {
-            Log::error('[Twitch Subscription State]', [
-                'content' => $e->getMessage()
-            ]);
             // not subscriber on twitch yet
             return null;
         }
