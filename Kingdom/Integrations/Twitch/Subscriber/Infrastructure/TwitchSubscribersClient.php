@@ -16,7 +16,7 @@ class TwitchSubscribersClient implements TwitchSubscribersService
 
     public function getSubscriptionState(OAuthAccessDTO $dto, string $twitchId, string $channelId): ?TwitchSubscriberDTO
     {
-        $uri = 'https://api.twitch.tv/helix/subscriptions';
+        $uri = 'https://api.twitch.tv/helix/subscriptions/user';
         $response = $this->client->request('GET', $uri, [
             'headers' => [
                 'Client-ID' => config('kingdom.integrations.twitch.client_id'),
