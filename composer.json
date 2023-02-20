@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -10,7 +13,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
-        "predis/predis": "^2.1"
+        "predis/predis": "^2.1",
+        "ext-pdo": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
