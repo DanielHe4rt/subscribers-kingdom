@@ -36,6 +36,7 @@ class GetSubscriptionStatus
 
     private function transformProviderData(array $providerData): array
     {
+        Log::alert('[Twitch Token Alert]', $providerData);
         return [
             TwitchOAuthAccessDTO::make($providerData['access']),
             SubscriberProviderDTO::make($providerData['provider'])
