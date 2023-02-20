@@ -61,11 +61,14 @@ class Subscriber extends Authenticatable
         return SubscriberFactory::new();
     }
 
-    public function lastToken(string $provider = null): HasManyThrough
+    public function lastToken(string $provider = null): Token
     {
-        return $this->hasManyThrough(Token::class, Provider::class)
-            ->when(!is_null($provider), fn ($query) => $query->where('provider', $provider))
-            ->orderByDesc('created_at');
+        return $this->hasOne(Provider::class)
+            ->whereProvider($provider)
+            ->first()
+            ->tokens()
+            ->orderByDesc('created_at')
+            ->first();
     }
 
     public function providers(): HasMany
@@ -75,15 +78,17 @@ class Subscriber extends Authenticatable
 
     public function providerByName(string $provider): ?Provider
     {
-        return $this->hasOne(Provider::class)
-            ->where('provider', $provider)->first();
+        return $this->hasOne(Provider::class)->where('provider', $provider)->first();
     }
 
     public function credentialsByProvider(string $provider): array
     {
         return [
-            'access' => $this->lastToken($provider)->first()->toArray(),
-            'provider' => $this->providerByName($provider)->first()->toArray()
+            'access' => $this->lastToken($provider)->toArray(),
+            'provider' => $this->providers()
+                ->whereProvider($provider)
+                ->first()
+                ->toArray()
         ];
     }
 }
