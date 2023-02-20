@@ -14,6 +14,7 @@ class ProfileController extends Controller
     public function getProfile(SubscriptionState $subscriptionState): View
     {
         $currentSubscriptionStatus = $subscriptionState->handle(auth()->id(), 'twitch');
+        dd($currentSubscriptionStatus);
 
         /** @var Subscriber $subscriber */
         $subscriber = auth()->user();

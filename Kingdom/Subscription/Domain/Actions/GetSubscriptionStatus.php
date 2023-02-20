@@ -4,6 +4,7 @@ namespace Kingdom\Subscription\Domain\Actions;
 
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 use Kingdom\Authentication\OAuth\Domain\DTO\OAuthAccessDTO;
 use Kingdom\Authentication\OAuth\Domain\Repositories\ProviderRepository;
 use Kingdom\Authentication\OAuth\Infrastructure\Models\Provider;
@@ -28,6 +29,7 @@ class GetSubscriptionStatus
         [$accessDTO, $providerDTO] = $this->transformProviderData(
             $subscriber->credentialsByProvider($provider)
         );
+
         return $this->getSubscriptionState($accessDTO, $providerDTO);
     }
 
@@ -49,9 +51,12 @@ class GetSubscriptionStatus
                 ->getSubscriptionState(
                     $accessDTO,
                     $provider->providerId,
-                    config('kingdom.integrations.twitch.channel_id')
+                    config('kingdom.integrations.twitch.channel_id'),
                 );
         } catch (ClientException $e) {
+            Log::error('[Twitch Subscription State]', [
+                'content' => $e->getMessage()
+            ]);
             // not subscriber on twitch yet
             return null;
         }
