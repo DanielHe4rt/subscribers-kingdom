@@ -13,7 +13,7 @@ class ImportSubscribers
     {
     }
 
-    public function fromCSV(): void
+    public function fromCSV(\Closure $closure): void
     {
         $subscribersListPath = storage_path('app/subscribers.csv');
         $subscribersList = fopen($subscribersListPath, 'r');
@@ -25,9 +25,11 @@ class ImportSubscribers
                 $headers = false;
                 continue;
             }
+            $subscriberDTO = NewSubscriberDTO::makeFromCSV('twitch', $row);
             $this->subscriptionRepository->create(
                 NewSubscriberDTO::makeFromCSV('twitch', $row)
             );
+            $closure($subscriberDTO);
         }
     }
 }

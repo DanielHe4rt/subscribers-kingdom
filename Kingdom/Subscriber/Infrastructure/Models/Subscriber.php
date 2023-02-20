@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Kingdom\Authentication\OAuth\Infrastructure\Models\Provider;
 use Kingdom\Authentication\OAuth\Infrastructure\Models\Token;
 use Kingdom\Subscriber\Infrastructure\Factories\SubscriberFactory;
+use Kingdom\Subscription\Infrastructure\Models\Subscription;
 
 /**
  * @property string $id
@@ -35,9 +36,25 @@ class Subscriber extends Authenticatable
         'avatar_url',
     ];
 
+    protected $appends = [
+        'months_subscribed'
+    ];
+
     protected $casts = [
         'phone_verified_at' => 'datetime',
     ];
+
+    public function monthsSubscribed(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->subscriptions()->count()
+        );
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class);
+    }
 
     protected static function newFactory(): Factory
     {
@@ -56,7 +73,7 @@ class Subscriber extends Authenticatable
         return $this->hasMany(Provider::class);
     }
 
-    public function providerByName(string $provider): Provider
+    public function providerByName(string $provider): ?Provider
     {
         return $this->hasOne(Provider::class)
             ->where('provider', $provider)->first();

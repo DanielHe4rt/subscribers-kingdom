@@ -35,6 +35,23 @@
                                 <button class="btn btn-primary">Desconectar Conta</button>
                             @endif
                             <hr>
+                            <h3>Conexão com o Github</h3>
+                            @if($githubProvider)
+                                <p>
+                                    Você está conectado como <b>{{ $twitchProvider->provider_username }}</b> e sua
+                                    conexão está
+                                    desde <b>{{ $twitchProvider->created_at->format('d/m/Y H:i:s') }}.</b>
+                                </p>
+                                <button class="btn btn-primary">Desconectar Conta</button>
+                            @else
+                                <p>
+                                    Conecte-se com o GitHub para receber seus pontos.</b>
+                                </p>
+                                <a target="_blank" href="{{ $githubUrl }}" class="btn btn-primary">
+                                    Conectar com o GitHub
+                                </a>
+                            @endif
+                            <hr>
                             @if($user->phone_verified_at)
                                 <h3>Validar telefone</h3>
                                 <p>

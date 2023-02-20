@@ -50,4 +50,14 @@ class TwitchEventSubClient implements TwitchEventSubService
             'headers' => ['Authorization' => 'Bearer ' . Cache::get('twitch-app-token')]
         ]);
     }
+
+    public function deleteAllSubscriptions(): void
+    {
+        $subscriptionsList = $this->listSubscriptions();
+
+        /** @var EventSubEntity $subscription */
+        foreach($subscriptionsList as $subscription) {
+            $this->deleteSubscription($subscription);
+        }
+    }
 }

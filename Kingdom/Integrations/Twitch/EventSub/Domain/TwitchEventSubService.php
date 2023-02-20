@@ -13,4 +13,6 @@ interface TwitchEventSubService
     public function listSubscriptions(): EventSubCollection;
 
     public function deleteSubscription(EventSubEntity $eventSub): void;
+
+    public function deleteAllSubscriptions(): void;
 }

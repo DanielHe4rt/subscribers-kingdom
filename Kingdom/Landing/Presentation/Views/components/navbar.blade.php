@@ -7,16 +7,16 @@
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Home
+                    <a class="nav-link" href="#">Home
                         <span class="visually-hidden">(current)</span>
                     </a>
                 </li>
                 @auth()
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Perfil</a>
+                        <a class="nav-link {{ request()->routeIs('profile') ? 'active' : '' }}"  href="{{ route('profile') }}">Perfil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Histórico</a>
+                        <a class="nav-link {{ request()->routeIs('history') ? 'active' : '' }}" href="{{ route('history') }}">Histórico</a>
                     </li>
                 @endauth
             </ul>

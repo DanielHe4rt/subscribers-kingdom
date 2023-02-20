@@ -6,6 +6,9 @@ use Illuminate\Console\Command;
 use Kingdom\Integrations\Twitch\Common\TwitchService;
 use Kingdom\Integrations\Twitch\EventSub\Domain\DTOs\EventSubDTO;
 use Kingdom\Integrations\Twitch\EventSub\Domain\Enums\EventSubTypesEnum;
+use Kingdom\Subscriber\Domain\DTO\SubscriberDTO;
+use Kingdom\Subscription\Application\ImportSubscribers;
+use Kingdom\Subscription\Domain\DTO\NewSubscriberDTO;
 
 class ImportPastSubscribersCommand extends Command
 {
@@ -24,9 +27,9 @@ class ImportPastSubscribersCommand extends Command
     protected $description = 'Import the past subscribers list into the system.';
 
 
-    public function handle(): int
+    public function handle(ImportSubscribers $importSubscribers): int
     {
-        // TODO: import service
+        $importSubscribers->fromCSV(fn(NewSubscriberDTO $dto) => $this->info($dto->username . ' - ' . $dto->subscribedAt->format('c')));
 
         return self::SUCCESS;
     }
