@@ -17,13 +17,12 @@ class GithubWebhookTransformer implements WebhookTransformerContract
 
     private function transformPayload(array $payload): array
     {
-        Log::channel('discord')->alert('fudeu', $payload);
         return [
             'status' => '',
-            'action' => $payload['payload']['action'],
+            'action' => $payload['action'],
             'provider' => 'github',
-            'provider_id' => $payload['payload']['sender']['id'],
-            'provider_login' => $payload['payload']['sender']['login']
+            'provider_id' => $payload['sender']['id'],
+            'provider_login' => $payload['sender']['login']
         ];
     }
 }
