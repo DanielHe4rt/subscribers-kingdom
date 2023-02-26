@@ -17,8 +17,8 @@ class GithubWebhookTransformer implements WebhookTransformerContract
     private function transformPayload(array $payload): array
     {
         return [
-            'status' => $payload['sender']['status'],
-            'action' => $payload['action'] ?? '',
+            'status' => '',
+            'action' => $payload['action'],
             'provider' => 'github',
             'provider_id' => $payload['sender']['id'],
             'provider_login' => $payload['sender']['login']

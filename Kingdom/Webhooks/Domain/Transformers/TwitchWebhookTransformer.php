@@ -19,7 +19,7 @@ class TwitchWebhookTransformer implements WebhookTransformerContract
     {
         return [
             'status' => $payload['subscription']['status'],
-            'type' => $payload['subscription']['type'],
+            'action' => $payload['subscription']['type'],
             'provider' => 'twitch',
             'provider_id' => $payload['event']['user_id'],
             'provider_login' => $payload['event']['user_login']
