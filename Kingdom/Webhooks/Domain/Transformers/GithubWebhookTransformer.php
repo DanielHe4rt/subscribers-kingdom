@@ -18,7 +18,7 @@ class GithubWebhookTransformer implements WebhookTransformerContract
     {
         return [
             'status' => $payload['sender']['status'],
-            'type' => $payload['action'] ?? '',
+            'action' => $payload['action'] ?? '',
             'provider' => 'github',
             'provider_id' => $payload['sender']['id'],
             'provider_login' => $payload['sender']['login']
