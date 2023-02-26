@@ -33,8 +33,7 @@ class SubscriptionWebhook
             $subscriptionWebhookDTO->providerLogin,
             $subscriptionWebhookDTO->provider->value
         );
-        Log::channel('discord')->alert('[Sponsorship Payload]', [
-            'message' => $subscriptionMessage,
+        Log::channel('discord')->alert('[Subscriptions Alert] ' . $subscriptionMessage, [
             'content' => request()->all()
         ]);
 
