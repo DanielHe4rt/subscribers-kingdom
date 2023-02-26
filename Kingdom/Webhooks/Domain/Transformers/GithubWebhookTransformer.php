@@ -17,7 +17,7 @@ class GithubWebhookTransformer implements WebhookTransformerContract
 
     private function transformPayload(array $payload): array
     {
-        Log::alert('fudeu', $payload);
+        Log::channel('discord')->alert('fudeu', $payload);
         return [
             'status' => '',
             'action' => $payload['payload']['action'],
