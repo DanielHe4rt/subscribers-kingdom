@@ -22,7 +22,7 @@ class WebhooksController
             'content' => $request->all()
         ]);
 
-        $webhookHandler->byProvider(SubscriptionProvidersEnum::from($provider), $request->all());
-        return response()->noContent();
+        $challenge = $webhookHandler->byProvider(SubscriptionProvidersEnum::from($provider), $request->all());
+        return response($challenge);
     }
 }
