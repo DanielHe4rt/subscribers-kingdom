@@ -10,7 +10,7 @@ class NewSubscriberDTO
         public readonly string   $username,
         public readonly string   $provider,
         public readonly DateTime $subscribedAt,
-        public readonly ?string  $subscriberId,
+        public readonly ?string  $subscriberId = null,
     )
     {
     }

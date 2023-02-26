@@ -17,11 +17,22 @@ class Subscription extends Model
     protected $fillable = [
         'subscriber_id',
         'provider',
+        'provider_id',
         'username',
         'subscribed_at',
     ];
 
-    protected $casts = [
-        'subscribed_at' => 'datetime'
+    protected $appends = [
+        'is_active'
     ];
+
+    protected $casts = [
+        'subscribed_at' => 'datetime',
+        'is_active' => 'bool'
+    ];
+
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->subscribed_at->isFuture();
+    }
 }
