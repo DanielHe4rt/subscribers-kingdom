@@ -20,10 +20,10 @@ class GithubWebhookTransformer implements WebhookTransformerContract
         Log::alert('fudeu', $payload);
         return [
             'status' => '',
-            'action' => $payload['action'],
+            'action' => $payload['payload']['action'],
             'provider' => 'github',
-            'provider_id' => $payload['sender']['id'],
-            'provider_login' => $payload['sender']['login']
+            'provider_id' => $payload['payload']['sender']['id'],
+            'provider_login' => $payload['payload']['sender']['login']
         ];
     }
 }
