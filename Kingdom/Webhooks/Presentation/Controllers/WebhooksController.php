@@ -22,6 +22,10 @@ class WebhooksController
             return response($request->input('challenge'));
         }
 
+        if ($provider == 'github') {
+            return response();
+        }
+
         Log::alert('[Sponsorship Payload]', [
             'content' => $request->all()
         ]);
