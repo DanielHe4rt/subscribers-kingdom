@@ -32,9 +32,9 @@ class TestCommand extends Command
     public function handle(TwitchService $twitchService): int
     {
         $eventDTO = new EventSubDTO(
-            EventSubTypesEnum::SUBSCRIPTION_ENDED,
+            EventSubTypesEnum::NEW_SUBSCRIPTION,
             ['broadcaster_user_id' => 123],
-            config('app.url') . '/callbacks/twitch'
+            config('app.url') . '/webhooks/twitch'
         );
 
         $response = $twitchService
