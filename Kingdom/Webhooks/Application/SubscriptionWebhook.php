@@ -2,6 +2,7 @@
 
 namespace Kingdom\Webhooks\Application;
 
+use Illuminate\Support\Facades\Log;
 use Kingdom\Subscription\Application\NewSubscription;
 use Kingdom\Subscription\Domain\DTO\NewSubscriberDTO;
 use Kingdom\Webhooks\Domain\Enums\SubscriptionProvidersEnum;
@@ -14,6 +15,8 @@ class SubscriptionWebhook
 
     public function byProvider(SubscriptionProvidersEnum $provider, array $payload)
     {
+
+
         $subscriptionWebhookDTO = $provider->getTransformer()->toDTO($payload);
 
         $this->newSubscription->persist(new NewSubscriberDTO(
