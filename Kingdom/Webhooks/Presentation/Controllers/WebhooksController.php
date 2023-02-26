@@ -26,7 +26,7 @@ class WebhooksController
         }
 
         if ($provider == 'github') {
-            return response();
+            return response('se fude');
         }
 
         $webhookHandler->byProvider(SubscriptionProvidersEnum::from($provider), $request->all());
