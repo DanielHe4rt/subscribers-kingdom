@@ -18,4 +18,12 @@ enum SubscriptionProvidersEnum: string
             self::GITHUB => new GithubWebhookTransformer,
         };
     }
+
+    public function getChallengeKey(): string
+    {
+        return match ($this) {
+            self::TWITCH => 'challenge',
+            self::GITHUB => 'zen',
+        };
+    }
 }

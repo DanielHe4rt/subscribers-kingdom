@@ -17,13 +17,15 @@ class WebhooksController
     )
     {
         // TODO: verify keys by provider with a middleware maybe?
+        $subscriptionProvidersEnum = SubscriptionProvidersEnum::from($provider);
 
-        if ($request->has('challenge')) {
-            return response($request->input('challenge'));
+        $challengeResponse = $request->input($subscriptionProvidersEnum->getChallengeKey());
+        if ($challengeResponse) {
+            return response($challengeResponse);
         }
 
-        Log::alert('aaaaa', $request->keys());
-        $webhookHandler->byProvider(SubscriptionProvidersEnum::from($provider), $request->all());
+
+        $webhookHandler->byProvider($subscriptionProvidersEnum, $request->all());
         return response()->noContent();
     }
 }
