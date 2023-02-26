@@ -46,7 +46,7 @@ class SetupStreamerAccountCommand extends Command
             $eventDTO = new EventSubDTO(
                 $event,
                 ['broadcaster_user_id' => config('kingdom.integrations.twitch.channel_id')],
-                config('app.url') . '/webhooks/twitch' . rand(1,9999)
+                config('app.url') . '/webhooks/twitch'
             );
 
             $response = $twitchService
