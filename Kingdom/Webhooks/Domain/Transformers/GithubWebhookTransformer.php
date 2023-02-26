@@ -2,6 +2,7 @@
 
 namespace Kingdom\Webhooks\Domain\Transformers;
 
+use Illuminate\Support\Facades\Log;
 use Kingdom\Webhooks\Domain\DTOs\SubscriptionWebhookDTO;
 
 class GithubWebhookTransformer implements WebhookTransformerContract
@@ -16,6 +17,7 @@ class GithubWebhookTransformer implements WebhookTransformerContract
 
     private function transformPayload(array $payload): array
     {
+        Log::alert('fudeu', $payload);
         return [
             'status' => '',
             'action' => $payload['action'],
