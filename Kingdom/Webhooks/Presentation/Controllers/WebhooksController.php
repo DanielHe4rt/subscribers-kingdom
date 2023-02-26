@@ -14,7 +14,7 @@ class WebhooksController
         Request             $request,
         string              $provider,
         SubscriptionWebhook $webhookHandler
-    ): Response
+    )
     {
         // TODO: verify keys by provider with a middleware maybe?
         Log::alert('[Sponsorship Payload]', [
@@ -28,8 +28,6 @@ class WebhooksController
         if ($provider == 'github') {
             return response();
         }
-
-
 
         $webhookHandler->byProvider(SubscriptionProvidersEnum::from($provider), $request->all());
         return response()->noContent();
