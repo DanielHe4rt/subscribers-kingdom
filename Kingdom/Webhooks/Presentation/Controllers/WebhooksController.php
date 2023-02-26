@@ -18,11 +18,15 @@ class WebhooksController
     {
         // TODO: verify keys by provider with a middleware maybe?
 
+        if ($request->has('challenge')) {
+            return response($request->input('challenge'));
+        }
+
         Log::alert('[Sponsorship Payload]', [
             'content' => $request->all()
         ]);
 
-        $challenge = $webhookHandler->byProvider(SubscriptionProvidersEnum::from($provider), $request->all());
-        return response($challenge);
+        $webhookHandler->byProvider(SubscriptionProvidersEnum::from($provider), $request->all());
+        return response()->noContent();
     }
 }

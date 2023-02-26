@@ -13,7 +13,7 @@ class SubscriptionWebhook
     {
     }
 
-    public function byProvider(SubscriptionProvidersEnum $provider, array $payload): string
+    public function byProvider(SubscriptionProvidersEnum $provider, array $payload)
     {
         $subscriptionWebhookDTO = $provider->getTransformer()->toDTO($payload);
 
@@ -22,7 +22,5 @@ class SubscriptionWebhook
             $subscriptionWebhookDTO->subscriptionProvider->value,
             now()->toDateTime(),
         ));
-
-        return $payload['challenge'] ?? '';
     }
 }
