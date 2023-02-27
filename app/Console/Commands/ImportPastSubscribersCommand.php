@@ -30,6 +30,21 @@ class ImportPastSubscribersCommand extends Command
 
     public function handle(ImportSubscribers $importSubscribers): int
     {
+        $lists = $this->prepareSubscriptionLists();
+
+        $importSubscribers->fromCSV(
+            $lists,
+            fn(NewSubscriberDTO $dto) => $this->info($dto->username . ' - ' . $dto->subscribedAt->format('c'))
+        );
+
+        return self::SUCCESS;
+    }
+
+    /**
+     * @return array
+     */
+    public function prepareSubscriptionLists(): array
+    {
         $lists = [];
         foreach (SubscriptionSpreadsheetsEnum::all() as $spreadsheetsEnum) {
             $spreadsheetUrl = $this->secret('Spreadsheet URL for >' . $spreadsheetsEnum->value);
@@ -38,12 +53,6 @@ class ImportPastSubscribersCommand extends Command
                 $spreadsheetUrl
             ];
         }
-
-        $importSubscribers->fromCSV(
-            $lists,
-            fn(NewSubscriberDTO $dto) => $this->info($dto->username . ' - ' . $dto->subscribedAt->format('c'))
-        );
-
-        return self::SUCCESS;
+        return $lists;
     }
 }
