@@ -15,7 +15,14 @@
                             <p class="text-muted mb-1"></p>
 
                             <div class="d-flex justify-content-center mb-2">
-                                <i>{{ $currentSubscription ? $currentSubscription->getSubscriptionDescription() : 'Não inscrito (ainda)' }}</i>
+                                <div class="row">
+                                    @foreach($currentSubscriptions as $subscription)
+                                        <div class="cow">
+                                            <span class="{{ $subscription['enum']->getIcon() }}"></span>
+                                            <i>{!!  isset($subscription['entity']) ? $subscription['enum']->alreadySubscriberText($subscription['entity']) : $subscription['enum']->notSubscribed()  !!}</i>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>

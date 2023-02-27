@@ -7,19 +7,20 @@ use Illuminate\View\View;
 use Kingdom\Integrations\Github\OAuth\Domain\Contracts\GithubOAuthContract;
 use Kingdom\Subscriber\Infrastructure\Models\Subscriber;
 use Kingdom\Subscription\Application\SubscriptionState;
+use Kingdom\Subscription\Domain\Actions\GetActiveSubscriptions;
 use Kingdom\Subscription\Domain\Actions\PaginateSubscriptionsById;
 
 class ProfileController extends Controller
 {
-    public function getProfile(SubscriptionState $subscriptionState): View
+    public function getProfile(GetActiveSubscriptions $subscriptionState): View
     {
-        $currentSubscriptionStatus = $subscriptionState->handle(auth()->id(), 'twitch');
+        $currentSubscriptionsStatus = $subscriptionState->handle(auth()->id());
 
         /** @var Subscriber $subscriber */
         $subscriber = auth()->user();
         return view('profile::main', [
             'user' => $subscriber,
-            'currentSubscription' => $currentSubscriptionStatus,
+            'currentSubscriptions' => $currentSubscriptionsStatus,
             'twitchProvider' => $subscriber->providerByName('twitch'),
             'githubProvider' => $subscriber->providerByName('github'),
             'githubUrl' => app(GithubOAuthContract::class)->redirectUrl()
