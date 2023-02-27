@@ -9,6 +9,7 @@ use Kingdom\Integrations\Twitch\EventSub\Domain\Enums\EventSubTypesEnum;
 use Kingdom\Subscriber\Domain\DTO\SubscriberDTO;
 use Kingdom\Subscription\Application\ImportSubscribers;
 use Kingdom\Subscription\Domain\DTO\NewSubscriberDTO;
+use Kingdom\Subscription\Domain\Enums\SubscriptionSpreadsheetsEnum;
 
 class ImportPastSubscribersCommand extends Command
 {
@@ -17,7 +18,7 @@ class ImportPastSubscribersCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'subs:import';
+    protected $signature = 'kingdom:subs:import';
 
     /**
      * The console command description.
@@ -29,7 +30,19 @@ class ImportPastSubscribersCommand extends Command
 
     public function handle(ImportSubscribers $importSubscribers): int
     {
-        $importSubscribers->fromCSV(fn(NewSubscriberDTO $dto) => $this->info($dto->username . ' - ' . $dto->subscribedAt->format('c')));
+        $lists = [];
+        foreach (SubscriptionSpreadsheetsEnum::all() as $spreadsheetsEnum) {
+            $spreadsheetUrl = $this->secret('Spreadsheet URL for >' . $spreadsheetsEnum->value);
+            $lists[] = [
+                $spreadsheetsEnum,
+                $spreadsheetUrl
+            ];
+        }
+
+        $importSubscribers->fromCSV(
+            $lists,
+            fn(NewSubscriberDTO $dto) => $this->info($dto->username . ' - ' . $dto->subscribedAt->format('c'))
+        );
 
         return self::SUCCESS;
     }

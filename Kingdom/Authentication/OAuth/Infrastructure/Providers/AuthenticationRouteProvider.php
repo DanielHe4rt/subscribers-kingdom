@@ -14,10 +14,12 @@ class AuthenticationRouteProvider extends RouteServiceProvider
         Route::prefix('auth')
             ->middleware('web')
             ->group(function () {
-            Route::prefix('oauth')->group(function () {
-                Route::get('/{provider}', [OAuthController::class, 'getAuthenticate']);
-                Route::get('/{provider}/redirect', [OAuthController::class, 'getRedirect']);
+                Route::post('/logout', [OAuthController::class, 'postLogout'])->name('logout');
+                Route::prefix('oauth')->group(function () {
+                    Route::get('/{provider}', [OAuthController::class, 'getAuthenticate']);
+                    Route::get('/{provider}/redirect', [OAuthController::class, 'getRedirect']);
+
+                });
             });
-        });
     }
 }
