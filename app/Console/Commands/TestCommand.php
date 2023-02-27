@@ -3,10 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Cache;
 use Kingdom\Integrations\Twitch\Common\TwitchService;
-use Kingdom\Integrations\Twitch\EventSub\Domain\DTOs\EventSubDTO;
-use Kingdom\Integrations\Twitch\EventSub\Domain\Enums\EventSubTypesEnum;
+use \Kingdom\Integrations\Twitch\EventSub\Domain\Entities\EventSubEntity;
 
 class TestCommand extends Command
 {
@@ -31,18 +29,14 @@ class TestCommand extends Command
      */
     public function handle(TwitchService $twitchService): int
     {
-        $eventDTO = new EventSubDTO(
-            EventSubTypesEnum::SUBSCRIPTION_ENDED,
-            ['broadcaster_user_id' => 123],
-            config('app.url') . '/callbacks/twitch'
-        );
-
         $response = $twitchService
             ->eventSub()
             ->listSubscriptions();
 
-        foreach ($response as $a) {
-            $twitchService->eventSub()->deleteSubscription($a);
+        /** @var EventSubEntity $eventSubEntity */
+        foreach ($response as $eventSubEntity) {
+            $this->info(sprintf('%s : %s', $eventSubEntity->typesEnum->value, $eventSubEntity->status->value));
+            $twitchService->eventSub()->deleteSubscription($eventSubEntity);
         }
 
 

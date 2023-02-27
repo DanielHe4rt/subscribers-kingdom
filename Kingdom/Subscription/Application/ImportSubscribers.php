@@ -2,7 +2,9 @@
 
 namespace Kingdom\Subscription\Application;
 
+use Generator;
 use Kingdom\Subscription\Domain\DTO\NewSubscriberDTO;
+use Kingdom\Subscription\Domain\Enums\SubscriptionSpreadsheetsEnum;
 use Kingdom\Subscription\Domain\Repository\SubscriptionRepository;
 
 class ImportSubscribers
@@ -13,23 +15,33 @@ class ImportSubscribers
     {
     }
 
-    public function fromCSV(\Closure $closure): void
+    public function fromCSV(array $subscriptionsList, \Closure $closure): void
     {
-        $subscribersListPath = storage_path('app/subscribers.csv');
-        $subscribersList = fopen($subscribersListPath, 'r');
+        foreach ($subscriptionsList as $list) {
+            [$spreadsheetEnum, $spreadsheetUrl] = $list;
 
+            foreach ($this->subscriptionsList($spreadsheetEnum, $spreadsheetUrl) as $row) {
+                $subscriberDTO = NewSubscriberDTO::makeFromCSV($row);
+
+                $this->subscriptionRepository->create($subscriberDTO);
+                $closure($subscriberDTO);
+            }
+        }
+    }
+
+
+    public function subscriptionsList(SubscriptionSpreadsheetsEnum $enum, string $url): Generator
+    {
+        $subscribersList = fopen($url, 'r');
         $headers = true;
-
         while ($row = fgetcsv($subscribersList, 1000)) {
             if ($headers) {
                 $headers = false;
                 continue;
             }
-            $subscriberDTO = NewSubscriberDTO::makeFromCSV('twitch', $row);
-            $this->subscriptionRepository->create(
-                NewSubscriberDTO::makeFromCSV('twitch', $row)
-            );
-            $closure($subscriberDTO);
+            yield $enum->transformer()->fromCSV($row);
         }
+
+        fclose($subscribersList);
     }
 }

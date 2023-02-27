@@ -10,22 +10,22 @@ class NewSubscriberDTO
         public readonly string   $username,
         public readonly string   $provider,
         public readonly DateTime $subscribedAt,
-        public readonly ?string  $subscriberId,
+        public readonly ?string  $subscriberId = null,
     )
     {
     }
 
-    public static function makeFromCSV(string $provider, array $payload): self
+    public static function makeFromCSV(array $payload): self
     {
         return new self(
-            username: $payload[1],
-            provider: $provider,
-            subscribedAt: new DateTime($payload[0]),
+            username: $payload['username'],
+            provider: $payload['provider'],
+            subscribedAt: new DateTime($payload['subscribed_at']),
             subscriberId: null,
         );
     }
 
-    public function toDatabase()
+    public function toDatabase(): array
     {
         return [
             'username' => $this->username,
