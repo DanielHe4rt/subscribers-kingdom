@@ -15,11 +15,12 @@ class ProfileController extends Controller
     public function getProfile(GetActiveSubscriptions $subscriptionState): View
     {
         $currentSubscriptionsStatus = $subscriptionState->handle(auth()->id());
-
+        $isEligible = isset($currentSubscriptionsStatus[0]['entities']) || isset($currentSubscriptionsStatus[1]['entities']);
         /** @var Subscriber $subscriber */
         $subscriber = auth()->user();
         return view('profile::main', [
             'user' => $subscriber,
+            'isEligible' => $isEligible,
             'currentSubscriptions' => $currentSubscriptionsStatus,
             'twitchProvider' => $subscriber->providerByName('twitch'),
             'githubProvider' => $subscriber->providerByName('github'),
@@ -28,7 +29,7 @@ class ProfileController extends Controller
     }
 
     public function viewSubscriptionHistory(
-        SubscriptionState $subscriptionState,
+        SubscriptionState         $subscriptionState,
         PaginateSubscriptionsById $subscriptions
 
     ): View

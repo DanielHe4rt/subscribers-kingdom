@@ -64,9 +64,9 @@
                                 <p>
                                     Seu telefone foi verificado em
                                     <b>{{ $user->phone_verified_at->format('d/m/Y H:i:s') }}</b> e você
-                                    {{ $currentSubscription ? 'está' : 'não está' }} elegível ao grupo de subs.
+                                    {{ $isEligible ? 'está' : 'não está' }} elegível ao grupo de subs.
                                 </p>
-                                @if($currentSubscription)
+                                @if($isEligible)
                                     <a href="{{ '#' }}">Link para grupo de subs</a>
                                 @endif
                             @else
